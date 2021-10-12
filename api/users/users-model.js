@@ -20,7 +20,13 @@ function find() {
    */
 }
 
-function findBy(filter) {
+async function findBy(filter) {
+  const user = await db('users as u')
+    .join('roles as r', 'r.role_id', 'u.role_id')
+    .select('u.user_id', 'u.username', 'u.password', 'r.role_name')
+    .where('u.username', filter)
+    .first();
+  return user;
   /**
     You will need to join two tables.
     Resolves to an ARRAY with all users that match the filter condition.
@@ -42,18 +48,7 @@ async function findById(user_id) {
     .select('u.user_id', 'u.username', 'r.role_name')
     .where('u.user_id', user_id)
     .first();
-  console.log(user);
   return user;
-  /**
-    You will need to join two tables.
-    Resolves to the user with the given user_id.
-
-    {
-      "user_id": 2,
-      "username": "sue",
-      "role_name": "instructor"
-    }
-   */
 }
 
 /**
