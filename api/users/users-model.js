@@ -36,7 +36,14 @@ function findBy(filter) {
    */
 }
 
-function findById(user_id) {
+async function findById(user_id) {
+  const user = await db('users as u')
+    .join('roles as r', 'r.role_id', 'u.role_id')
+    .select('u.user_id', 'u.username', 'r.role_name')
+    .where('u.user_id', user_id)
+    .first();
+  console.log(user);
+  return user;
   /**
     You will need to join two tables.
     Resolves to the user with the given user_id.

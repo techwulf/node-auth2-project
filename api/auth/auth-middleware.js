@@ -44,6 +44,19 @@ const checkUsernameExists = (req, res, next) => {
 
 
 const validateRoleName = (req, res, next) => {
+  const user = req.body
+  user.role_name = user.role_name ? user.role_name.trim() : '';
+  if (user.role_name) {
+    if (user.role_name === 'admin') {
+      res.status(422).json({message: 'Role name can not be admin'});
+    } else if (user.role_name.length > 32){
+      res.status(422).json(
+        {message: 'Role name can not be longer than 32 chars'}
+      );
+    }
+  } else {
+    user.role_name = 'student';
+  }
   /*
     If the role_name in the body is valid, set req.role_name to be the trimmed string and proceed.
 
@@ -62,6 +75,7 @@ const validateRoleName = (req, res, next) => {
       "message": "Role name can not be longer than 32 chars"
     }
   */
+  next();
 }
 
 module.exports = {
